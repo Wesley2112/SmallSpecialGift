@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Thùy Dương 🌌</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Quicksand:wght@500;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+
+        /* Galaxy Canvas - always there */
+        #galaxy-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Stage1 Particles Canvas */
+        #stage1-particles-canvas {
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            z-index: 8;
+        }
+
+        /* Fade to black overlay */
+        #fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        /* --- STAGE 1: LETTER --- */
+        #letter-stage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .welcome-screen {
+            text-align: center;
+            background: rgba(10, 10, 30, 0.85);
+            padding: 50px 60px;
+            border-radius: 30px;
+            box-shadow: 0 0 60px rgba(255, 92, 164, 0.3), 0 0 120px rgba(120, 180, 255, 0.2);
+            border: 2px solid rgba(255, 92, 164, 0.4);
+            max-width: 420px;
+            width: 90%;
+            animation: fadeInUp 1s ease, float 6s ease-in-out infinite;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .welcome-screen::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #ff5ca4, #78b4ff, #ffb4e0, #78b4ff, #ff5ca4);
+            border-radius: 32px;
+            z-index: -1;
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .welcome-screen h2 {
+            color: #fff;
+            font-size: 20px;
+            margin: 8px 0;
+            font-weight: 300;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            font-family: 'Poppins', 'Quicksand', sans-serif;
+        }
+
+        .welcome-screen h2 span {
+            color: #ff5ca4;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(255, 92, 164, 0.8);
+        }
+
+        .welcome-screen .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff5ca4, #78b4ff, transparent);
+            margin: 25px auto;
+            width: 80%;
+        }
+
+        .open-btn {
+            background: linear-gradient(135deg, #ff5ca4, #ff8ed5);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            padding: 16px 50px;
+            font-size: 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 92, 164, 0.5);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Poppins', 'Quicksand', sans-serif;
+        }
+
+        .open-btn:hover {
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 0 50px rgba(255, 92, 164, 0.8);
+        }
+
+        .letter-screen {
+            display: none;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .letter-container {
+            background: rgba(8, 8, 25, 0.92);
+            min-height: 320px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 40px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 0 80px rgba(120, 180, 255, 0.2), 0 0 40px rgba(255, 92, 164, 0.15);
+            border: 3px solid rgba(120, 180, 255, 0.3);
+            position: relative;
+            backdrop-filter: blur(15px);
+            animation: fadeInUp 1s ease, float 8s ease-in-out infinite;
+        }
+
+        .letter-container::before {
+            content: '✨';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+
+        .letter-container::after {
+            content: '✨';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+
+        #text-display {
+            font-size: 22px;
+            line-height: 1.8;
+            color: #fff;
+            font-weight: 400;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+            word-wrap: break-word;
+            width: 100%;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            font-family: 'Poppins', 'Quicksand', sans-serif;
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+        }
+
+        /* --- STAGE 2: COUNTDOWN --- */
+        #countdown-stage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: none;
+        }
+
+        #countdown-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- STAGE 3: MAIN CONTENT --- */
+        #main-stage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            display: none;
+        }
+
+        /* Shooting stars */
+        .night {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform: rotateZ(135deg);
+            z-index: 2;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .shooting_star {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            height: 2px;
+            width: 0;
+            background: linear-gradient(-45deg, #5f91ff, rgba(0,0,255,0));
+            border-radius: 999px;
+            filter: drop-shadow(0 0 6px #699bff);
+            animation: tail 3s ease-in-out infinite, shooting 3s ease-in-out infinite;
+        }
+
+        .shooting_star::before,
+        .shooting_star::after {
+            content: '';
+            position: absolute;
+            top: calc(50% - 1px);
+            right: 0;
+            height: 2px;
+            width: 0;
+            background: linear-gradient(-45deg, rgba(0,0,255,0), #ffffff, rgba(0,0,255,0));
+            border-radius: 100%;
+            animation: shining 3s ease-in-out infinite;
+        }
+
+        .shooting_star::before {
+            transform: translateX(50%) rotateZ(45deg);
+        }
+
+        .shooting_star::after {
+            transform: translateX(50%) rotateZ(-45deg);
+        }
+
+        @keyframes tail {
+            0% { width: 0; }
+            30% { width: 120px; }
+            100% { width: 0; }
+        }
+
+        @keyframes shining {
+            0% { width: 0; }
+            50% { width: 30px; }
+            100% { width: 0; }
+        }
+
+        @keyframes shooting {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(350px); }
+        }
+
+        #main-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Galaxy Background Canvas (always there) -->
+    <canvas id="galaxy-canvas"></canvas>
+
+    <!-- Stage 1 Particles Canvas -->
+    <canvas id="stage1-particles-canvas"></canvas>
+
+    <!-- Fade to black overlay -->
+    <div id="fade-overlay"></div>
+
+    <!-- --- STAGE 1: LETTER --- -->
+    <div id="letter-stage">
+        <div class="welcome-screen" id="welcome-screen">
+            <h2>From: <span>Tùng Dương</span></h2>
+            <div class="divider"></div>
+            <h2>To: <span>Thùy Dương</span></h2>
+            <br>
+            <button class="open-btn" onclick="openLetter()">Mở ✨</button>
+        </div>
+
+        <div class="letter-screen" id="letter-screen">
+            <div class="letter-container">
+                <div id="text-display"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- STAGE 2: COUNTDOWN --- -->
+    <div id="countdown-stage">
+        <canvas id="countdown-canvas"></canvas>
+    </div>
+
+    <!-- --- STAGE 3: MAIN CONTENT --- -->
+    <div id="main-stage">
+        <div class="night">
+            <div class="shooting_star" style="top: 10%; left: 15%; animation-delay: 0s;"></div>
+            <div class="shooting_star" style="top: 20%; left: 70%; animation-delay: 1s;"></div>
+            <div class="shooting_star" style="top: 35%; left: 40%; animation-delay: 2s;"></div>
+            <div class="shooting_star" style="top: 55%; left: 80%; animation-delay: 1.5s;"></div>
+            <div class="shooting_star" style="top: 75%; left: 20%; animation-delay: 0.8s;"></div>
+            <div class="shooting_star" style="top: 65%; left: 60%; animation-delay: 2.5s;"></div>
+            <div class="shooting_star" style="top: 30%; left: 90%; animation-delay: 3s;"></div>
+            <div class="shooting_star" style="top: 85%; left: 50%; animation-delay: 1.2s;"></div>
+            <div class="shooting_star" style="top: 45%; left: 10%; animation-delay: 2.8s;"></div>
+            <div class="shooting_star" style="top: 15%; left: 55%; animation-delay: 0.4s;"></div>
+        </div>
+        <canvas id="main-canvas"></canvas>
+    </div>
+
+    <script>
+        // --------------------------
+        // GLOBAL GALAXY BACKGROUND
+        // --------------------------
+        const galaxyCanvas = document.getElementById('galaxy-canvas');
+        const galaxyCtx = galaxyCanvas.getContext('2d');
+        let stars = [];
+        let nebulas = [];
+        let beat = 0;
+
+        function initGalaxy() {
+            resizeGalaxy();
+            createGalaxy();
+            animateGalaxy();
+        }
+
+        function resizeGalaxy() {
+            galaxyCanvas.width = window.innerWidth;
+            galaxyCanvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', () => {
+            resizeGalaxy();
+            createGalaxy();
+            if (stage1ParticlesCanvas) resizeStage1Particles();
+        });
+
+        function createGalaxy() {
+            stars = [];
+            nebulas = [];
+
+            for (let i = 0; i < 1500; i++) {
+                stars.push({
+                    x: Math.random() * galaxyCanvas.width,
+                    y: Math.random() * galaxyCanvas.height,
+                    size: Math.random() * 2 + 0.5,
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.002 + 0.001
+                });
+            }
+
+            for (let i = 0; i < 15; i++) {
+                nebulas.push({
+                    x: galaxyCanvas.width / 2 + (Math.random() - 0.5) * galaxyCanvas.width * 0.8,
+                    y: galaxyCanvas.height / 2 + (Math.random() - 0.5) * galaxyCanvas.height * 0.3,
+                    radius: Math.random() * 350 + 150,
+                    color: ["255,120,255", "120,180,255", "255,180,220", "180,120,255"][Math.floor(Math.random() * 4)]
+                });
+            }
+        }
+
+        function drawGalaxy() {
+            const bg = galaxyCtx.createLinearGradient(0, 0, 0, galaxyCanvas.height);
+            bg.addColorStop(0, "#02010f");
+            bg.addColorStop(0.5, "#050520");
+            bg.addColorStop(1, "#000000");
+            galaxyCtx.fillStyle = bg;
+            galaxyCtx.fillRect(0, 0, galaxyCanvas.width, galaxyCanvas.height);
+
+            nebulas.forEach(n => {
+                const g = galaxyCtx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.radius);
+                g.addColorStop(0, `rgba(${n.color},0.08)`);
+                g.addColorStop(1, `rgba(${n.color},0)`);
+                galaxyCtx.fillStyle = g;
+                galaxyCtx.beginPath();
+                galaxyCtx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+                galaxyCtx.fill();
+            });
+
+            galaxyCtx.save();
+            galaxyCtx.translate(galaxyCanvas.width / 2, galaxyCanvas.height / 2);
+            galaxyCtx.rotate(-0.35);
+            const galaxy = galaxyCtx.createLinearGradient(-galaxyCanvas.width / 2, 0, galaxyCanvas.width / 2, 0);
+            galaxy.addColorStop(0, "rgba(255,255,255,0)");
+            galaxy.addColorStop(0.5, "rgba(255,255,255,0.06)");
+            galaxy.addColorStop(1, "rgba(255,255,255,0)");
+            galaxyCtx.fillStyle = galaxy;
+            galaxyCtx.filter = "blur(90px)";
+            galaxyCtx.fillRect(-galaxyCanvas.width, -140, galaxyCanvas.width * 2, 280);
+            galaxyCtx.filter = "none";
+            galaxyCtx.restore();
+
+            stars.forEach(star => {
+                star.alpha += Math.sin(Date.now() * star.speed) * 0.003;
+                galaxyCtx.beginPath();
+                galaxyCtx.fillStyle = `rgba(255,255,255,${0.2 + Math.abs(star.alpha) * 0.3})`;
+                galaxyCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                galaxyCtx.fill();
+            });
+        }
+
+        function animateGalaxy() {
+            requestAnimationFrame(animateGalaxy);
+            beat += 0.05;
+            drawGalaxy();
+        }
+
+        // --------------------------
+        // STAGE 1 PARTICLES
+        // --------------------------
+        let stage1ParticlesCanvas, stage1ParticlesCtx;
+        let stage1FloatingParticles = [];
+        let stage1TDParticles = [];
+        let tdTriggered = false;
+        let stage1Active = true;
+
+        function initStage1Particles() {
+            stage1ParticlesCanvas = document.getElementById('stage1-particles-canvas');
+            stage1ParticlesCtx = stage1ParticlesCanvas.getContext('2d');
+            resizeStage1Particles();
+            animateStage1Particles();
+        }
+
+        function resizeStage1Particles() {
+            stage1ParticlesCanvas.width = window.innerWidth;
+            stage1ParticlesCanvas.height = window.innerHeight;
+        }
+
+        class Stage1FloatingParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * stage1ParticlesCanvas.width;
+                this.y = stage1ParticlesCanvas.height + Math.random() * 50;
+                this.size = Math.random() * 3 + 1;
+                this.speedY = (Math.random() * 2 + 1);
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.alpha = Math.random() * 0.6 + 0.4;
+                this.color = ["#ff5ca4", "#ff8ed5", "#ffb4e0"][Math.floor(Math.random() * 3)];
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < -50) this.reset();
+            }
+
+            draw() {
+                stage1ParticlesCtx.save();
+                stage1ParticlesCtx.globalAlpha = this.alpha;
+                stage1ParticlesCtx.fillStyle = this.color;
+                stage1ParticlesCtx.shadowColor = this.color;
+                stage1ParticlesCtx.shadowBlur = 8;
+                stage1ParticlesCtx.beginPath();
+                stage1ParticlesCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                stage1ParticlesCtx.fill();
+                stage1ParticlesCtx.restore();
+            }
+        }
+
+        class Stage1TDParticle {
+            constructor(targetX, targetY) {
+                this.targetX = targetX;
+                this.targetY = targetY;
+                // Start above the screen, random X
+                this.x = Math.random() * stage1ParticlesCanvas.width;
+                this.y = -50 - Math.random() * 200;
+                this.size = Math.random() * 3 + 1.5;
+                this.alpha = 0;
+                this.color = ["#ff5ca4", "#ff8ed5", "#ffb4e0"][Math.floor(Math.random() * 3)];
+                this.speed = 0.015;
+                this.reached = false;
+                this.lifeTime = 0; // Track how long it's been visible
+                this.maxLife = 4000; // Stay visible for 4 seconds
+                this.orbitAngle = Math.random() * Math.PI * 2; // For orbit motion
+                this.orbitRadius = 30 + Math.random() * 40;
+            }
+
+            update() {
+                if (!this.reached) {
+                    // Move towards target
+                    const dx = this.targetX - this.x;
+                    const dy = this.targetY - this.y;
+                    this.x += dx * this.speed;
+                    this.y += dy * this.speed;
+                    this.alpha += 0.01;
+                    if (this.alpha > 0.9) this.alpha = 0.9;
+                    // Check if reached
+                    if (Math.abs(dx) < 3 && Math.abs(dy) < 3) {
+                        this.reached = true;
+                        this.reachedTime = Date.now();
+                    }
+                } else {
+                    // Orbit around target for a while
+                    this.orbitAngle += 0.03;
+                    this.x = this.targetX + Math.cos(this.orbitAngle) * this.orbitRadius;
+                    this.y = this.targetY + Math.sin(this.orbitAngle) * this.orbitRadius;
+                    this.lifeTime = Date.now() - this.reachedTime;
+                    if (this.lifeTime > this.maxLife - 1000) {
+                        // Start fading out
+                        this.alpha -= 0.01;
+                    }
+                }
+            }
+
+            draw() {
+                if (this.alpha <= 0) return;
+                stage1ParticlesCtx.save();
+                stage1ParticlesCtx.globalAlpha = this.alpha;
+                stage1ParticlesCtx.fillStyle = this.color;
+                stage1ParticlesCtx.shadowColor = this.color;
+                stage1ParticlesCtx.shadowBlur = 8;
+                stage1ParticlesCtx.beginPath();
+                stage1ParticlesCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                stage1ParticlesCtx.fill();
+                stage1ParticlesCtx.restore();
+            }
+        }
+
+        function createTDParticles() {
+            const offCanvas = document.createElement('canvas');
+            const offCtx = offCanvas.getContext('2d');
+            offCanvas.width = stage1ParticlesCanvas.width;
+            offCanvas.height = stage1ParticlesCanvas.height;
+            const fontSize = Math.min(stage1ParticlesCanvas.width * 0.1, 120);
+            offCtx.font = `bold ${fontSize}px Arial`;
+            offCtx.textAlign = 'center';
+            offCtx.textBaseline = 'middle';
+            offCtx.fillStyle = '#fff';
+            // Move TD much higher - 15% of screen height instead of 35%
+            offCtx.fillText("TD", stage1ParticlesCanvas.width * 0.3, stage1ParticlesCanvas.height * 0.15);
+            offCtx.fillText("TD", stage1ParticlesCanvas.width * 0.7, stage1ParticlesCanvas.height * 0.15);
+            const data = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height).data;
+            stage1TDParticles = [];
+            // Sparser particles - skip more pixels
+            for (let y = 0; y < offCanvas.height; y += 8) {
+                for (let x = 0; x < offCanvas.width; x += 8) {
+                    const index = (y * offCanvas.width + x) * 4;
+                    if (data[index + 3] > 120) {
+                        stage1TDParticles.push(new Stage1TDParticle(x, y));
+                    }
+                }
+            }
+        }
+
+        function animateStage1Particles() {
+            if (!stage1Active) return;
+            requestAnimationFrame(animateStage1Particles);
+            stage1ParticlesCtx.clearRect(0, 0, stage1ParticlesCanvas.width, stage1ParticlesCanvas.height);
+
+            while (stage1FloatingParticles.length < 10) {
+                stage1FloatingParticles.push(new Stage1FloatingParticle());
+            }
+
+            stage1FloatingParticles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            stage1TDParticles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+        }
+
+        // --------------------------
+        // STAGE 1: LETTER
+        // --------------------------
+        const lines = [
+            "Eeiyooo m ơi👋",
+            "T có một món quà nhỏ dành tặng m đó...🫣",
+            "Nhưng chờ chút m ơi",
+            "Trước tiên, hì hì, t cảm ơn m cái đã",
+            "M còn nhớ cái hồi ở nhà tự ôn THPTQG không👀",
+            "Lúc đó m đã chọn im lặng...để t ôn bài",
+            "T cảm ơn m nha!(Cảm động lắm luôn!)",
+            "Thứ hai, t cũng cảm ơn m tiếp...",
+            "Vì m vẫn luôn ở đó khi t cần....",
+            "Ý t là, t nhắn thì m vẫn rep á",
+            "Mặc dù mấy câu hỏi của t có hơi cục súc quá😓",
+            "Thứ ba, t tiếp tục cảm ơn m...",
+            "Vì m vẫn luôn là người đồng hành cùng t....",
+            "Được thi chung phòng với m....",
+            "T cảm thấy siêu siêu may mắn luôn!",
+            "Dù chưa trọn vẹn 24 giờ...",
+            "Nhưng mọi thứ đã không phải là 'Một mình làm bài'... ",
+            "Mà là 'Có người đồng hành'!🍀....",
+            "Cuối cùng, t xin lỗi vì nãy giờ t chưa show quà cho m nữa🤦...",
+            "Nhưng một chút nữa thôi nha m🙏...",
+            "Điều t hy vọng nhất ở m về ngày hôm nay, 1th7...",
+            "Là m sẽ buồn ít ít tí✨",
+            "Nhưng làm sao bây giờ....",
+            "Eeieiei mà khoan m ơi!",
+            "Từ từ đã",
+            "Mấy giờ rồi ta",
+            "Nay phải ngủ sớm thôi m ạ!",
+            "Mai còn sắp nguyện vọng nữa",
+            "Mốt còn đọc truyện nữa",
+            "Kia còn xem phim nữa",
+            "Ựa😅nhiều thứ để làm quá",
+            "Okay, để tránh mất thêm thời gian quý báu này....",
+            "Bây giờ, xin mời m chiêm ngưỡng món quà nhỏ này....",
+            "Thông điệp hôm nay: Bạn đẹp nhất khi bạn mỉm cười✨. ",
+            "Tùng Dương."
+        ];
+
+        let letterLineIndex = 0;
+        const textDisplay = document.getElementById('text-display');
+
+        function openLetter() {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('letter-screen').style.display = 'block';
+            setTimeout(startTypingSequence, 400);
+        }
+
+        function startTypingSequence() {
+            if (letterLineIndex < lines.length) {
+                typeLine(lines[letterLineIndex]);
+            }
+        }
+
+        function typeLine(text) {
+            textDisplay.classList.remove('fade-out');
+            textDisplay.innerHTML = '';
+            let charIndex = 0;
+            const typingSpeed = 45;
+
+            if (letterLineIndex === 10 && !tdTriggered) {
+                tdTriggered = true;
+                createTDParticles();
+            }
+
+            function type() {
+                if (charIndex < text.length) {
+                    textDisplay.innerHTML += text.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, typingSpeed);
+                } else {
+                    if (letterLineIndex === lines.length - 1) {
+                        setTimeout(() => {
+                            console.log("Moving to stage 2");
+                            stage1Active = false;
+                            transitionToStage2();
+                        }, 3000);
+                        return;
+                    }
+
+                    let pauseTime = Math.max(2500, text.length * 50);
+                    if (pauseTime > 5000) pauseTime = 5000;
+                    setTimeout(fadeOutLine, pauseTime);
+                }
+            }
+            type();
+        }
+
+        function fadeOutLine() {
+            textDisplay.classList.add('fade-out');
+            setTimeout(() => {
+                letterLineIndex++;
+                startTypingSequence();
+            }, 800);
+        }
+
+        // --------------------------
+        // TRANSITIONS
+        // --------------------------
+        const fadeOverlay = document.getElementById('fade-overlay');
+
+        function transitionToStage2() {
+            console.log("Starting transition to stage 2");
+            fadeOverlay.style.opacity = '1';
+            setTimeout(() => {
+                document.getElementById('letter-stage').style.display = 'none';
+                document.getElementById('stage1-particles-canvas').style.display = 'none';
+                document.getElementById('countdown-stage').style.display = 'flex';
+                document.getElementById('countdown-stage').style.justifyContent = 'center';
+                document.getElementById('countdown-stage').style.alignItems = 'center';
+                initCountdown();
+                setTimeout(() => {
+                    fadeOverlay.style.opacity = '0';
+                }, 200);
+            }, 1000);
+        }
+
+        function transitionToStage3() {
+            console.log("Starting transition to stage 3");
+            fadeOverlay.style.opacity = '1';
+            setTimeout(() => {
+                document.getElementById('countdown-stage').style.display = 'none';
+                document.getElementById('main-stage').style.display = 'block';
+                initMain();
+                setTimeout(() => {
+                    fadeOverlay.style.opacity = '0';
+                }, 200);
+            }, 1000);
+        }
+
+        // --------------------------
+        // STAGE 2: COUNTDOWN - LOW LAG VERSION
+        // --------------------------
+        let countdownCanvas, countdownCtx;
+        let countdownParticles = [];
+        let countdownValue = 3;
+        let countdownPhase = 'forming';
+        let countdownStartTime = Date.now();
+        let countdownAnimationId = null;
+
+        function initCountdown() {
+            countdownCanvas = document.getElementById('countdown-canvas');
+            countdownCtx = countdownCanvas.getContext('2d');
+            countdownCanvas.width = window.innerWidth;
+            countdownCanvas.height = window.innerHeight;
+            countdownValue = 3;
+            countdownPhase = 'forming';
+            countdownStartTime = Date.now();
+            createCountdownParticles(countdownValue);
+            console.log("Countdown initialized");
+            animateCountdown();
+        }
+
+        function createCountdownParticles(num) {
+            const offCanvas = document.createElement('canvas');
+            const offCtx = offCanvas.getContext('2d');
+            offCanvas.width = countdownCanvas.width;
+            offCanvas.height = countdownCanvas.height;
+
+            const fontSize = Math.min(countdownCanvas.width * 0.45, 500);
+            offCtx.font = `bold ${fontSize}px Arial`;
+            offCtx.textAlign = 'center';
+            offCtx.textBaseline = 'middle';
+            offCtx.fillStyle = '#fff';
+            offCtx.fillText(num, offCanvas.width / 2, offCanvas.height / 2);
+
+            const data = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height).data;
+
+            countdownParticles = [];
+            // Use much sparser particles for low lag
+            for (let y = 0; y < offCanvas.height; y += 10) {
+                for (let x = 0; x < offCanvas.width; x += 10) {
+                    const index = (y * offCanvas.width + x) * 4;
+                    if (data[index + 3] > 100) {
+                        countdownParticles.push({
+                            x: Math.random() * countdownCanvas.width,
+                            y: Math.random() * 100 - 150,
+                            targetX: x,
+                            targetY: y,
+                            vx: 0,
+                            vy: 0,
+                            size: Math.random() * 4 + 2,
+                            alpha: 0,
+                            color: ["#ff5ca4", "#ff8ed5", "#ffb4e0"][Math.floor(Math.random() * 3)]
+                        });
+                    }
+                }
+            }
+            console.log(`Countdown: Created ${countdownParticles.length} particles for ${num}`);
+        }
+
+        function animateCountdown() {
+            if (countdownValue < 1) {
+                if (countdownAnimationId) cancelAnimationFrame(countdownAnimationId);
+                transitionToStage3();
+                return;
+            }
+            countdownAnimationId = requestAnimationFrame(animateCountdown);
+            countdownCtx.clearRect(0, 0, countdownCanvas.width, countdownCanvas.height);
+            const elapsed = Date.now() - countdownStartTime;
+
+            if (countdownPhase === 'forming') {
+                const progress = Math.min(elapsed / 1600, 1);
+                countdownParticles.forEach(p => {
+                    // Ease towards target
+                    const ease = 1 - Math.pow(1 - progress, 3);
+                    p.x = p.x + (p.targetX - p.x) * 0.06;
+                    p.y = p.y + (p.targetY - p.y) * 0.06;
+                    p.alpha = Math.min(1, p.alpha + 0.02);
+                });
+                if (progress >= 1) {
+                    countdownPhase = 'hold';
+                    countdownStartTime = Date.now();
+                }
+            } else if (countdownPhase === 'hold') {
+                const progress = Math.min(elapsed / 1000, 1);
+                countdownParticles.forEach(p => {
+                    // Add small jitter
+                    p.x += (Math.random() - 0.5);
+                    p.y += (Math.random() - 0.5);
+                });
+                if (progress >= 1) {
+                    countdownPhase = 'explode';
+                    countdownStartTime = Date.now();
+                    // Set explode velocities
+                    countdownParticles.forEach(p => {
+                        const angle = Math.random() * Math.PI * 2;
+                        const speed = Math.random() * 7 + 3;
+                        p.vx = Math.cos(angle) * speed;
+                        p.vy = Math.sin(angle) * speed;
+                    });
+                }
+            } else if (countdownPhase === 'explode') {
+                const progress = Math.min(elapsed / 1400, 1);
+                countdownParticles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.1; // gravity
+                    p.alpha = 1 - progress;
+                });
+                if (progress >= 1) {
+                    countdownValue--;
+                    if (countdownValue > 0) {
+                        countdownPhase = 'forming';
+                        countdownStartTime = Date.now();
+                        createCountdownParticles(countdownValue);
+                    } else {
+                        transitionToStage3();
+                        return;
+                    }
+                }
+            }
+
+            // Draw all particles with less shadow for performance
+            countdownParticles.forEach(p => {
+                countdownCtx.save();
+                countdownCtx.globalAlpha = Math.max(0, p.alpha);
+                countdownCtx.fillStyle = p.color;
+                countdownCtx.shadowBlur = 5; // Smaller shadow for speed
+                countdownCtx.shadowColor = p.color;
+                countdownCtx.beginPath();
+                countdownCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                countdownCtx.fill();
+                countdownCtx.restore();
+            });
+        }
+
+        // --------------------------
+        // STAGE 3: MAIN CONTENT
+        // --------------------------
+        let mainCanvas, mainCtx;
+        let textPoints = [];
+        let hearts = [];
+        let smokes = [];
+        let mainBeat = 0;
+        const mainText = "Thùy Dương";
+        let mainAnimationId = null;
+
+        function initMain() {
+            mainCanvas = document.getElementById('main-canvas');
+            mainCtx = mainCanvas.getContext('2d');
+            mainCanvas.width = window.innerWidth;
+            mainCanvas.height = window.innerHeight;
+            buildText();
+            console.log("Main content initialized");
+            animateMain();
+        }
+
+        function buildText() {
+            textPoints = [];
+            const offCanvas = document.createElement('canvas');
+            const offCtx = offCanvas.getContext('2d');
+            offCanvas.width = mainCanvas.width;
+            offCanvas.height = mainCanvas.height;
+            const fontSize = Math.min(mainCanvas.width * 0.12, 180);
+            offCtx.font = `bold ${fontSize}px Arial`;
+            offCtx.textAlign = 'center';
+            offCtx.textBaseline = 'middle';
+            offCtx.fillStyle = '#fff';
+            offCtx.fillText(mainText, offCanvas.width / 2, offCanvas.height / 2);
+
+            const data = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height).data;
+            for (let y = 0; y < offCanvas.height; y += 4) {
+                for (let x = 0; x < offCanvas.width; x += 4) {
+                    const index = (y * offCanvas.width + x) * 4;
+                    if (data[index + 3] > 120) {
+                        textPoints.push({ x, y });
+                    }
+                }
+            }
+            createParticles();
+        }
+
+        function randomPoint() {
+            return textPoints[Math.floor(Math.random() * textPoints.length)];
+        }
+
+        class Heart {
+            constructor() { this.reset(); }
+            reset() {
+                const p = randomPoint();
+                this.x = p.x;
+                this.y = p.y;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 0.18 + 0.08;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (Math.random() < 0.005) this.reset();
+            }
+        }
+
+        class Smoke {
+            constructor() { this.reset(); }
+            reset() {
+                const p = randomPoint();
+                this.x = p.x;
+                this.y = p.y;
+                this.radius = Math.random() * 3 + 1;
+                this.alpha = Math.random() * 0.25;
+                this.speed = Math.random() * 0.15 + 0.03;
+            }
+            update() {
+                this.y -= this.speed;
+                this.alpha -= 0.001;
+                if (this.alpha <= 0) this.reset();
+            }
+        }
+
+        function createParticles() {
+            hearts = [];
+            smokes = [];
+            for (let i = 0; i < 250; i++) hearts.push(new Heart());
+            for (let i = 0; i < 70; i++) smokes.push(new Smoke());
+        }
+
+        function drawHeart(x, y, scale) {
+            mainCtx.save();
+            mainCtx.translate(x, y);
+            mainCtx.scale(scale, scale);
+            mainCtx.beginPath();
+            mainCtx.moveTo(0, -5);
+            mainCtx.bezierCurveTo(-10, -15, -25, -5, -25, 10);
+            mainCtx.bezierCurveTo(-25, 25, 0, 40, 0, 50);
+            mainCtx.bezierCurveTo(0, 40, 25, 25, 25, 10);
+            mainCtx.bezierCurveTo(25, -5, 10, -15, 0, -5);
+            mainCtx.closePath();
+            mainCtx.fillStyle = '#ff5ca4';
+            mainCtx.shadowColor = '#ff5ca4';
+            mainCtx.shadowBlur = 15;
+            mainCtx.fill();
+            mainCtx.restore();
+        }
+
+        function animateMain() {
+            mainAnimationId = requestAnimationFrame(animateMain);
+
+            mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+            mainBeat += 0.05;
+
+            const pulse = 1 + Math.sin(mainBeat) * 0.05;
+
+            mainCtx.save();
+            mainCtx.translate(mainCanvas.width / 2, mainCanvas.height / 2);
+            mainCtx.scale(pulse, pulse);
+            mainCtx.translate(-mainCanvas.width / 2, -mainCanvas.height / 2);
+
+            smokes.forEach(s => {
+                s.update();
+                mainCtx.beginPath();
+                mainCtx.fillStyle = `rgba(255,180,220,${s.alpha})`;
+                mainCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                mainCtx.fill();
+            });
+
+            hearts.forEach(h => {
+                h.update();
+                drawHeart(h.x, h.y, h.size);
+            });
+
+            const fontSize = Math.min(mainCanvas.width * 0.12, 180);
+            mainCtx.font = `bold ${fontSize}px Arial`;
+            mainCtx.textAlign = 'center';
+            mainCtx.textBaseline = 'middle';
+            mainCtx.lineWidth = 3;
+            mainCtx.strokeStyle = '#ff5ca4';
+            mainCtx.shadowColor = '#ff5ca4';
+            mainCtx.shadowBlur = 25;
+            mainCtx.strokeText(mainText, mainCanvas.width / 2, mainCanvas.height / 2);
+            mainCtx.restore();
+        }
+
+        // --------------------------
+        // START IT ALL!
+        // --------------------------
+        console.log("Starting app");
+        initGalaxy();
+        initStage1Particles();
+    </script>
+</body>
+</html>
