@@ -997,7 +997,7 @@
                 this.y = p.y;
                 this.vx = (Math.random() - 0.5) * 0.5;
                 this.vy = (Math.random() - 0.5) * 0.5;
-                this.size = Math.random() * 0.18 + 0.08;
+                this.size = Math.random() * 0.12 + 0.06; // Giảm kích thước
             }
             update() {
                 this.x += this.vx;
@@ -1026,8 +1026,8 @@
         function createParticles() {
             hearts = [];
             smokes = [];
-            for (let i = 0; i < 250; i++) hearts.push(new Heart());
-            for (let i = 0; i < 70; i++) smokes.push(new Smoke());
+            for (let i = 0; i < 145; i++) hearts.push(new Heart());
+            for (let i = 0; i < 35; i++) smokes.push(new Smoke());
         }
 
         function drawHeart(x, y, scale) {
@@ -1043,7 +1043,7 @@
             mainCtx.closePath();
             mainCtx.fillStyle = '#ff5ca4';
             mainCtx.shadowColor = '#ff5ca4';
-            mainCtx.shadowBlur = 15;
+            mainCtx.shadowBlur = 8; // Giảm từ 15 xuống 8
             mainCtx.fill();
             mainCtx.restore();
         }
