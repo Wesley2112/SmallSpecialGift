@@ -52,6 +52,44 @@
             transition: opacity 0.8s ease-in-out;
         }
 
+        /* --- MUSIC BUTTONS --- */
+        .music-btn {
+            position: fixed;
+            bottom: 30px;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-family: 'Poppins', 'Quicksand', sans-serif;
+            cursor: pointer;
+            z-index: 2000;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+
+        #music-btn-1 {
+            left: 30px;
+            background-color: #4a90d9; /* Xanh dương nhẹ */
+            color: white;
+        }
+
+        #music-btn-2 {
+            right: 30px;
+            background-color: #4a90d9;
+            color: white;
+        }
+
+        .music-btn:disabled {
+            background-color: #888; /* Màu xám */
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .music-btn.playing {
+            background-color: #2c6fb0; /* Xanh dương đậm hơn khi đang phát */
+            box-shadow: 0 0 20px rgba(44,111,176,0.6);
+        }
+
         /* --- STAGE 1: LETTER --- */
         #letter-stage {
             position: fixed;
@@ -324,6 +362,17 @@
 
     <!-- Fade to black overlay -->
     <div id="fade-overlay"></div>
+
+    <!-- --- MUSIC PLAYERS --- -->
+    <audio id="audio1" loop>
+        <source src="Piano Tìm em - Hngle ft Bảo Anh  Piano tutorial - Ng Tuyen.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio2" loop>
+        <source src="NƠI NÀY CÓ ANH    PIANO  SƠN TÙNG _ MTP - Vu Ngoc Tien.mp3" type="audio/mpeg">
+    </audio>
+
+    <button id="music-btn-1" class="music-btn">Tìm em.</button>
+    <button id="music-btn-2" class="music-btn">Nơi này có anh.</button>
 
     <!-- --- STAGE 1: LETTER --- -->
     <div id="letter-stage">
@@ -645,10 +694,10 @@
             "Mà là 'Có người đồng hành'!🍀....",
             "Cuối cùng, t xin lỗi vì nãy giờ t chưa show quà cho m nữa🤦...",
             "Nhưng một chút nữa thôi nha m🙏...",
-            "Điều t hy vọng nhất ở m về ngày hôm nay, 1th7...",
+            "Điều t hy vọng nhất ở m về ngày hôm nay, và mọi ngày luôn...",
             "Là m sẽ buồn ít ít tí✨",
             "Nhưng làm sao bây giờ....",
-            "Eeieiei mà khoan m ơi!",
+            "Ủaaaa mà khoan m ơi!",
             "Từ từ đã",
             "Mấy giờ rồi ta",
             "Nay phải ngủ sớm thôi m ạ!",
@@ -1036,6 +1085,62 @@
             mainCtx.strokeText(mainText, mainCanvas.width / 2, mainCanvas.height / 2);
             mainCtx.restore();
         }
+
+        // --------------------------
+        // MUSIC BUTTONS CONTROL
+        // --------------------------
+        const btn1 = document.getElementById('music-btn-1');
+        const btn2 = document.getElementById('music-btn-2');
+        const audio1 = document.getElementById('audio1');
+        const audio2 = document.getElementById('audio2');
+        let activeAudio = null;
+
+        function resetAllButtons() {
+            btn1.classList.remove('playing');
+            btn2.classList.remove('playing');
+            btn1.disabled = false;
+            btn2.disabled = false;
+        }
+
+        btn1.addEventListener('click', () => {
+            if (activeAudio === audio1) {
+                // Dừng phát nhạc 1
+                audio1.pause();
+                activeAudio = null;
+                resetAllButtons();
+            } else {
+                // Phát nhạc 1
+                if (activeAudio) {
+                    activeAudio.pause();
+                }
+                audio1.play().catch(err => console.log("Lỗi phát audio 1:", err));
+                activeAudio = audio1;
+                // Cập nhật trạng thái nút
+                resetAllButtons();
+                btn1.classList.add('playing');
+                btn2.disabled = true;
+            }
+        });
+
+        btn2.addEventListener('click', () => {
+            if (activeAudio === audio2) {
+                // Dừng phát nhạc 2
+                audio2.pause();
+                activeAudio = null;
+                resetAllButtons();
+            } else {
+                // Phát nhạc 2
+                if (activeAudio) {
+                    activeAudio.pause();
+                }
+                audio2.play().catch(err => console.log("Lỗi phát audio 2:", err));
+                activeAudio = audio2;
+                // Cập nhật trạng thái nút
+                resetAllButtons();
+                btn2.classList.add('playing');
+                btn1.disabled = true;
+            }
+        });
 
         // --------------------------
         // START IT ALL!
