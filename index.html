@@ -6,7 +6,7 @@
     <title>Gửi Thùy Dương 🌌</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Italianno&subset=latin,vietnamese&display=swap" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Quicksand:wght@500;700&display=swap');
 
@@ -519,6 +519,11 @@
             resizeGalaxy();
             createGalaxy();
             if (stage1ParticlesCanvas) resizeStage1Particles();
+            if (mainCanvas) {
+                mainCanvas.width = window.innerWidth;
+                mainCanvas.height = window.innerHeight;
+                buildText();
+            }
         });
 
         function createGalaxy() {
@@ -742,7 +747,7 @@
         // LETTER LOGIC
         // --------------------------
         const lines = [
-             "Eeiyooo m ơi👋",
+            "Eeiyooo m ơi👋",
             "T có một món quà nhỏ dành tặng m...🫣",
             "Nhưng chờ chút m ơi",
             "Trước tiên, hì hì, t cảm ơn m cái đã",
@@ -775,8 +780,7 @@
             "Tối còn ngủ ngon nữa...",
             "Ựa😅nhiều thứ để làm quá",
             "Okay, để tránh mất thêm thời gian quý báu này....",
-            "Bây giờ, xin mời m chuyển sang Quà tặng Thùy Dương,",
-            "Để chiêm ngưỡng món quà nhỏ này..."
+            "Bây giờ, xin mời m chiêm ngưỡng món quà nhỏ này....",
             "Thông điệp hôm nay: Bạn đẹp nhất khi bạn mỉm cười✨. ",
             "Tùng Dương."
         ];
